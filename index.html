@@ -96,8 +96,7 @@
     }
 
     .glass{
-      background:
-        linear-gradient(180deg, rgba(0,255,120,.09), rgba(0,255,120,.04));
+      background: linear-gradient(180deg, rgba(0,255,120,.09), rgba(0,255,120,.04));
       border:1px solid var(--line);
       box-shadow:
         var(--shadow),
@@ -304,6 +303,7 @@
       align-items:center;
       gap:12px;
       margin-bottom:14px;
+      flex-wrap:wrap;
     }
 
     .console-title{
@@ -335,6 +335,47 @@
       font-size:.95rem;
       background:rgba(255,255,255,.03);
       border:1px solid rgba(57,255,117,.18);
+    }
+
+    .mode-bar{
+      display:flex;
+      gap:10px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .mode-btn{
+      padding:10px 16px;
+      border-radius:14px;
+      border:1px solid rgba(57,255,117,.18);
+      background:rgba(255,255,255,.03);
+      color:#dffff0;
+      font-family:'Orbitron',monospace;
+      font-size:.86rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+      box-shadow:0 0 10px rgba(57,255,117,.04);
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(57,255,117,.32);
+      box-shadow:0 0 16px rgba(57,255,117,.10);
+    }
+
+    .mode-btn.active{
+      background:linear-gradient(180deg, #9dffb5, #39ff75);
+      color:#07210d;
+      border-color:rgba(57,255,117,.45);
+      box-shadow:0 0 18px rgba(57,255,117,.22);
+    }
+
+    .mode-status{
+      font-size:.95rem;
+      color:#caffd7;
+      margin-bottom:12px;
+      font-weight:700;
     }
 
     .chat-box{
@@ -601,9 +642,10 @@
     @media (max-width:700px){
       .split{ grid-template-columns:1fr; }
       .console-head{ flex-direction:column; align-items:stretch; }
-      .search{ max-width:none; }
+      .search{ max-width:none; min-width:unset; }
       .msg{ max-width:92%; }
       .brand{ letter-spacing:1px; }
+      .input-wrap{ grid-template-columns:1fr 50px 56px; }
     }
   </style>
 </head>
@@ -652,8 +694,8 @@
     <div class="split">
       <div class="card glass panel-3d">
         <div class="mini-label">System Mode</div>
-        <div class="big-value" style="font-size:1.45rem;">HACKER CORE</div>
-        <div class="sub-value">● STIFF: <span id="stiffClock">00:14:20</span></div>
+        <div class="big-value" style="font-size:1.45rem;" id="systemModeText">HACKER CORE</div>
+        <div class="sub-value">● ACTIVE: <span id="modeText">FAST</span></div>
       </div>
 
       <div class="card glass panel-3d">
@@ -683,9 +725,16 @@
         <div class="search">🔍 <span>Search logs...</span></div>
       </div>
 
+      <div class="mode-bar">
+        <button class="mode-btn active" id="fastBtn" type="button">FAST MODE</button>
+        <button class="mode-btn" id="deepBtn" type="button">DEEP MODE</button>
+      </div>
+
+      <div class="mode-status">Current mode: <span id="modeStatusLabel">FAST</span></div>
+
       <div class="chat-box" id="chatBox">
         <div class="msg bot">System online. I am NOVA. Enter your next command.</div>
-        <div class="msg bot">Hi bro! Hacker core activated. Enna matter? Secure mode running.</div>
+        <div class="msg bot">Hi bro! Hacker core activated. Fast mode running.</div>
         <div class="msg bot">Safe modes only: chat, notes, reminders, security checks, and system status.</div>
       </div>
 
@@ -749,11 +798,16 @@
     const micBtn = document.getElementById("micBtn");
     const notesArea = document.getElementById("notesArea");
     const saveStatus = document.getElementById("saveStatus");
+    const fastBtn = document.getElementById("fastBtn");
+    const deepBtn = document.getElementById("deepBtn");
+    const modeText = document.getElementById("modeText");
+    const modeStatusLabel = document.getElementById("modeStatusLabel");
 
     const NOVA_API_URL = "https://nova.universaldragon.com/api/chat";
+    const MODE_KEY = "ud_nova_mode";
 
+    let currentMode = localStorage.getItem(MODE_KEY) || "fast";
     let uptimeSeconds = 8 * 60 + 7;
-    let stiffSeconds = 14 * 60 + 20;
 
     function formatClock(total){
       const h = String(Math.floor(total / 3600)).padStart(2, "0");
@@ -764,9 +818,7 @@
 
     setInterval(() => {
       uptimeSeconds++;
-      stiffSeconds++;
       document.getElementById("uptime").textContent = formatClock(uptimeSeconds);
-      document.getElementById("stiffClock").textContent = formatClock(stiffSeconds);
     }, 1000);
 
     function updateStat(idValue, idBar, min, max, suffix = "%"){
@@ -786,6 +838,24 @@
       document.getElementById("packetLossValue").textContent = `${(Math.random() * 0.4).toFixed(1)}%`;
     }
     setInterval(updateTelemetry, 3500);
+
+    function applyModeUI(){
+      const isFast = currentMode === "fast";
+      fastBtn.classList.toggle("active", isFast);
+      deepBtn.classList.toggle("active", !isFast);
+      modeText.textContent = currentMode.toUpperCase();
+      modeStatusLabel.textContent = currentMode.toUpperCase();
+    }
+
+    function setMode(mode){
+      currentMode = mode;
+      localStorage.setItem(MODE_KEY, mode);
+      applyModeUI();
+      addMessage(`Mode switched to ${mode.toUpperCase()}.`, "bot", true);
+    }
+
+    fastBtn.addEventListener("click", () => setMode("fast"));
+    deepBtn.addEventListener("click", () => setMode("deep"));
 
     function addMessage(text, type = "bot", withActions = false){
       const msg = document.createElement("div");
@@ -855,7 +925,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: text,
-            mode: text.length > 80 ? "deep" : "fast"
+            mode: currentMode
           })
         });
 
@@ -929,6 +999,7 @@
 
     window.addEventListener("load", () => {
       updateTelemetry();
+      applyModeUI();
 
       document.querySelectorAll(".panel-3d").forEach(card => {
         card.addEventListener("mousemove", e => {
