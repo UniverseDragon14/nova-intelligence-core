@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universal Dragon | NOVA Intelligence Core</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root{
+      --bg1:#090b22;
+      --bg2:#1b1f68;
+      --bg3:#311a80;
+      --panel:rgba(56,74,190,.26);
+      --panel-2:rgba(71,96,255,.18);
+      --line:rgba(190,220,255,.22);
+      --cyan:#8ff5ff;
+      --cyan-2:#59d9ff;
+      --text:#eef6ff;
+      --muted:#c9d5ff;
+      --soft:#9fb2ff;
+      --green:#77ffb3;
+      --pink:#ffc6ef;
+      --shadow:0 10px 40px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+
+    body{
+      font-family:'Rajdhani',sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(120,150,255,.25), transparent 22%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.08), transparent 15%),
+        radial-gradient(circle at 50% 85%, rgba(100,220,255,.15), transparent 18%),
+        linear-gradient(180deg, #0a0d2d 0%, #1a1f6f 42%, #2a1e7d 100%);
+      overflow-x:hidden;
+    }
+
+    .bg-grid{
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:34px 34px;
+      opacity:.22;
+    }
+
+    .glow{
+      position:fixed; inset:auto;
+      width:420px; height:420px; border-radius:50%;
+      filter:blur(70px); opacity:.18; pointer-events:none; z-index:0;
+      background:radial-gradient(circle, #98b6ff, transparent 65%);
+      top:80px; left:-90px;
+    }
+
+    .glow.right{
+      top:220px; right:-120px; left:auto;
+      background:radial-gradient(circle, #7ef0ff, transparent 65%);
+    }
+
+    .wrap{
+      position:relative; z-index:1;
+      width:min(920px, 100%);
+      margin:0 auto;
+      padding:18px 14px 28px;
+    }
+
+    .glass{
+      background:linear-gradient(180deg, rgba(98,118,255,.22), rgba(65,77,187,.18));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .topbar{
+      border-radius:20px;
+      padding:12px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .topbar .left{
+      display:flex; align-items:center; gap:10px;
+      font-family:'Orbitron',monospace;
+      font-size:.88rem;
+      color:var(--cyan);
+      letter-spacing:1px;
+      font-weight:700;
+    }
+
+    .green-dot{
+      width:10px; height:10px; border-radius:999px;
+      background:#74ffb2;
+      box-shadow:0 0 14px #74ffb2;
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      0%,100%{opacity:1; transform:scale(1);}
+      50%{opacity:.45; transform:scale(.86);}
+    }
+
+    .topbar .right{
+      font-family:'Orbitron',monospace;
+      color:#e5fbff;
+      font-size:.82rem;
+      letter-spacing:1px;
+    }
+
+    .hero{
+      border-radius:28px;
+      padding:26px 18px 18px;
+      margin-bottom:16px;
+      background:
+        radial-gradient(circle at 15% 25%, rgba(148,183,255,.20), transparent 18%),
+        linear-gradient(180deg, rgba(76,98,255,.28), rgba(62,68,177,.20));
+    }
+
+    .brand{
+      font-family:'Orbitron',monospace;
+      font-size:clamp(2rem, 6vw, 3.7rem);
+      font-weight:900;
+      line-height:1;
+      letter-spacing:2px;
+      color:#bffcff;
+      text-shadow:0 0 18px rgba(143,245,255,.25);
+      margin-bottom:10px;
+      text-transform:uppercase;
+    }
+
+    .sub{
+      font-family:'Orbitron',monospace;
+      color:#f6f0ff;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      font-size:.86rem;
+      opacity:.95;
+      margin-bottom:14px;
+    }
+
+    .pill{
+      display:flex; align-items:center; gap:10px;
+      border-radius:999px;
+      padding:12px 18px;
+      margin-top:10px;
+      font-weight:700;
+      font-size:1rem;
+    }
+
+    .pill + .pill{ margin-top:12px; }
+
+    .pill .icon{
+      width:22px; text-align:center; opacity:.95;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .card{
+      border-radius:24px;
+      padding:18px 18px;
+    }
+
+    .mini-label{
+      font-family:'Orbitron',monospace;
+      font-size:.82rem;
+      letter-spacing:1.8px;
+      text-transform:uppercase;
+      color:#dfe9ff;
+      margin-bottom:8px;
+      opacity:.95;
+    }
+
+    .big-value{
+      font-family:'Orbitron',monospace;
+      font-size:2.05rem;
+      font-weight:800;
+      color:#d9ffff;
+      line-height:1.1;
+      text-shadow:0 0 10px rgba(150,235,255,.18);
+    }
+
+    .sub-value{
+      margin-top:6px;
+      color:#e7efff;
+      font-size:1rem;
+      font-weight:600;
+      opacity:.95;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .console{
+      border-radius:26px;
+      padding:18px;
+      margin-bottom:16px;
+    }
+
+    .console-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .console-title{
+      font-family:'Orbitron',monospace;
+      font-size:1.35rem;
+      font-weight:800;
+      color:#f1fbff;
+      display:flex; align-items:center; gap:10px;
+    }
+
+    .console-title .prompt{
+      color:#d8f0ff;
+      font-size:1.45rem;
+    }
+
+    .search{
+      min-width:220px;
+      max-width:260px;
+      display:flex; align-items:center; gap:8px;
+      padding:10px 14px;
+      border-radius:14px;
+      color:#f4fbff;
+      font-weight:700;
+      font-size:.95rem;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.16);
+    }
+
+    .chat-box{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      height:460px;
+      overflow:auto;
+      padding-right:4px;
+      margin-bottom:14px;
+      scroll-behavior:smooth;
+    }
+
+    .chat-box::-webkit-scrollbar{ width:8px; }
+    .chat-box::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.18);
+      border-radius:999px;
+    }
+
+    .msg{
+      max-width:84%;
+      border-radius:20px;
+      padding:14px 16px;
+      border:1px solid rgba(220,240,255,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      font-size:1.07rem;
+      line-height:1.4;
+      animation:fadeUp .25s ease;
+      white-space:pre-wrap;
+    }
+
+    @keyframes fadeUp{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .msg.bot{
+      align-self:flex-start;
+      background:linear-gradient(180deg, rgba(110,160,255,.23), rgba(72,92,224,.18));
+      color:#f5fbff;
+    }
+
+    .msg.user{
+      align-self:flex-end;
+      background:linear-gradient(180deg, rgba(167,128,255,.22), rgba(119,93,224,.18));
+      color:#fff5ff;
+      border-bottom-right-radius:8px;
+    }
+
+    .msg-actions{
+      margin-top:8px;
+      display:flex;
+      gap:8px;
+      opacity:.9;
+    }
+
+    .tiny-btn{
+      width:28px; height:28px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.88rem;
+      cursor:pointer;
+    }
+
+    .input-wrap{
+      display:grid;
+      grid-template-columns:1fr 50px 56px;
+      gap:10px;
+      align-items:center;
+    }
+
+    .text-input{
+      height:54px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      padding:0 16px;
+      font-size:1.02rem;
+      outline:none;
+      font-family:'Rajdhani',sans-serif;
+      font-weight:600;
+    }
+
+    .text-input::placeholder{ color:#d7e3ff; opacity:.72; }
+
+    .round-btn{
+      height:54px; width:50px;
+      border:none; border-radius:16px;
+      cursor:pointer;
+      color:#fff;
+      font-size:1.18rem;
+      box-shadow:var(--shadow);
+    }
+
+    .mic-btn{
+      background:linear-gradient(180deg, rgba(142,120,255,.45), rgba(107,91,230,.35));
+      border:1px solid rgba(255,255,255,.16);
+    }
+
+    .send-btn{
+      width:56px;
+      background:linear-gradient(180deg, #ffe8f8, #ffc8ef);
+      color:#4d2858;
+      font-weight:900;
+    }
+
+    .note-card,
+    .stat-card,
+    .sec-card{
+      border-radius:24px;
+      padding:16px;
+      margin-bottom:14px;
+    }
+
+    .section-title{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:12px;
+      font-family:'Orbitron',monospace;
+      font-size:1rem;
+      color:#f2fbff;
+      font-weight:700;
+    }
+
+    .notes{
+      width:100%;
+      min-height:180px;
+      resize:vertical;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      padding:16px;
+      font-size:1rem;
+      font-family:'Rajdhani',sans-serif;
+      outline:none;
+    }
+
+    .notes::placeholder{ color:#d7e3ff; opacity:.7; }
+
+    .note-help{
+      margin-top:8px;
+      font-size:.9rem;
+      color:#f0f6ff;
+      opacity:.84;
+    }
+
+    .stat{
+      margin-bottom:14px;
+    }
+
+    .stat:last-child{ margin-bottom:0; }
+
+    .stat-head{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:8px;
+      font-family:'Orbitron',monospace;
+      color:#f4fbff;
+      font-size:.95rem;
+    }
+
+    .bar{
+      height:14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, #a7fbff, #7be3ff);
+      box-shadow:0 0 14px rgba(123,227,255,.3);
+    }
+
+    .sec-box{
+      border-radius:18px;
+      padding:14px 14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .sec-title{
+      font-family:'Orbitron',monospace;
+      font-size:.94rem;
+      margin-bottom:8px;
+      color:#eeffff;
+    }
+
+    .sec-ok{
+      color:#b6ffda;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .sec-text{
+      color:#f0f5ff;
+      font-size:.96rem;
+      opacity:.92;
+      line-height:1.45;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:10px;
+      color:#eef4ff;
+      opacity:.84;
+      font-family:'Orbitron',monospace;
+      font-size:.82rem;
+      letter-spacing:1.3px;
+      padding-bottom:12px;
+    }
+
+    .typing{
+      display:flex; gap:6px; align-items:center;
+    }
+
+    .typing span{
+      width:8px; height:8px; border-radius:50%;
+      background:#dffcff;
+      animation:bounce 1.2s infinite;
+      opacity:.8;
+    }
+
+    .typing span:nth-child(2){ animation-delay:.15s; }
+    .typing span:nth-child(3){ animation-delay:.3s; }
+
+    @keyframes bounce{
+      0%,80%,100%{ transform:scale(.6); opacity:.45; }
+      40%{ transform:scale(1); opacity:1; }
+    }
+
+    @media (max-width: 700px){
+      .split{ grid-template-columns:1fr; }
+      .console-head{ flex-direction:column; align-items:stretch; }
+      .search{ max-width:none; }
+      .msg{ max-width:92%; }
+      .brand{ letter-spacing:1px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow"></div>
+  <div class="glow right"></div>
+
+  <div class="wrap">
+    <div class="topbar glass">
+      <div class="left">
+        <div class="green-dot"></div>
+        <span>TRK-992-X</span>
+      </div>
+      <div class="right">0% PACKET LOSS</div>
+    </div>
+
+    <section class="hero glass">
+      <div class="brand">UNIVERSAL DRAGON</div>
+      <div class="sub">NOVA Intelligence Core · Created by Aslam</div>
+
+      <div class="pill glass">
+        <span class="icon">🛡️</span>
+        <span>Help in silence • Protect with intelligence</span>
+      </div>
+
+      <div class="pill glass" id="voiceStatus">
+        <span class="icon">🔊</span>
+        <span>AUTO-SPEAK WHEN MOOD CHANGES: OFF</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="card glass">
+        <div class="big-value" id="uptime">00:08:07</div>
+        <div class="sub-value">SYSTEM UPTIME</div>
+      </div>
+
+      <div class="card glass">
+        <div class="big-value" style="color:#c8fff0;">ONLINE</div>
+        <div class="sub-value">CORE STATUS</div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="card glass">
+        <div class="mini-label">System Mode</div>
+        <div class="big-value" style="font-size:1.45rem;">MULTIVERSE CORE</div>
+        <div class="sub-value">● STIFF: <span id="stiffClock">00:14:20</span></div>
+      </div>
+
+      <div class="card glass">
+        <div class="mini-label">Power Status</div>
+        <div class="big-value" style="font-size:1.4rem;">UNSTOPPABLE</div>
+        <div class="sub-value">● LEVEL: MAXIMUM</div>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="card glass">
+        <div class="mini-label">Access Card Key</div>
+        <div class="big-value" style="font-size:1.15rem;">TRK-992-X</div>
+        <div class="sub-value">● STATUS: AUTHORIZED</div>
+      </div>
+
+      <div class="card glass">
+        <div class="mini-label">Network Health</div>
+        <div class="big-value" id="latencyValue" style="font-size:1.3rem;">16ms</div>
+        <div class="sub-value"><span id="packetLossValue">0.2%</span> PACKET LOSS</div>
+      </div>
+    </div>
+
+    <section class="console glass">
+      <div class="console-head">
+        <div class="console-title"><span class="prompt">&gt;_</span> Nova Console</div>
+        <div class="search">🔍 <span>Search logs...</span></div>
+      </div>
+
+      <div class="chat-box" id="chatBox">
+        <div class="msg bot">System online. I am Nova. Enter your next command.</div>
+        <div class="msg bot">Hi bro! Multiverse Regional Node activated. Enna matter? Powering up... dominance established.</div>
+        <div class="msg bot">Safe modes only: chat, notes, reminders, security checks, and system status.</div>
+      </div>
+
+      <div class="input-wrap">
+        <input id="userInput" class="text-input" type="text" placeholder="Enter command..." autocomplete="off">
+        <button class="round-btn mic-btn" id="micBtn" title="Mic">🎤</button>
+        <button class="round-btn send-btn" id="sendBtn" title="Send">➤</button>
+      </div>
+    </section>
+
+    <section class="note-card glass">
+      <div class="section-title">
+        <span>🗂️ System Notes</span>
+        <span id="saveStatus">Not saved</span>
+      </div>
+      <textarea id="notesArea" class="notes" placeholder="Enter encrypted notes here...."></textarea>
+      <div class="note-help">* Auto-save active: Saves every 30s or after 2s of inactivity.</div>
+    </section>
+
+    <section class="stat-card glass">
+      <div class="stat">
+        <div class="stat-head">
+          <span>⚡ CPU LOAD</span>
+          <span id="cpuValue">38%</span>
+        </div>
+        <div class="bar"><div class="fill" id="cpuBar" style="width:38%"></div></div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-head">
+          <span>💾 MEMORY FLUX</span>
+          <span id="memValue">49%</span>
+        </div>
+        <div class="bar"><div class="fill" id="memBar" style="width:49%"></div></div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-head">
+          <span>🌡️ CORE TEMP</span>
+          <span id="tempValue">43°C</span>
+        </div>
+        <div class="bar"><div class="fill" id="tempBar" style="width:43%"></div></div>
+      </div>
+    </section>
+
+    <section class="sec-card glass">
+      <div class="sec-box">
+        <div class="sec-title">SECURITY STATUS</div>
+        <div class="sec-ok">Ethical Mode Active</div>
+        <div class="sec-text">No tracking, no spying, no unauthorized access. Core protocols strictly enforced.</div>
+      </div>
+    </section>
+
+    <div class="footer">Universal Dragon OS v1 • Nova Intelligence Core • Secure Build</div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
+    const notesArea = document.getElementById("notesArea");
+    const saveStatus = document.getElementById("saveStatus");
+
+    const NOVA_API_URL = "https://nova.universaldragon.com/api/chat";
+
+    let uptimeSeconds = 8 * 60 + 7;
+    let stiffSeconds = 14 * 60 + 20;
+
+    function formatClock(total){
+      const h = String(Math.floor(total / 3600)).padStart(2, "0");
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2, "0");
+      const s = String(total % 60).padStart(2, "0");
+      return `${h}:${m}:${s}`;
+    }
+
+    setInterval(() => {
+      uptimeSeconds++;
+      stiffSeconds++;
+      document.getElementById("uptime").textContent = formatClock(uptimeSeconds);
+      document.getElementById("stiffClock").textContent = formatClock(stiffSeconds);
+    }, 1000);
+
+    function updateStat(idValue, idBar, min, max, suffix = "%"){
+      const val = Math.floor(min + Math.random() * (max - min + 1));
+      document.getElementById(idValue).textContent = `${val}${suffix}`;
+      document.getElementById(idBar).style.width = `${Math.min(val,100)}%`;
+      return val;
+    }
+
+    function updateTelemetry(){
+      updateStat("cpuValue", "cpuBar", 28, 52, "%");
+      updateStat("memValue", "memBar", 38, 65, "%");
+      const temp = Math.floor(39 + Math.random() * 10);
+      document.getElementById("tempValue").textContent = `${temp}°C`;
+      document.getElementById("tempBar").style.width = `${Math.min(temp,100)}%`;
+      document.getElementById("latencyValue").textContent = `${12 + Math.floor(Math.random() * 9)}ms`;
+      document.getElementById("packetLossValue").textContent = `${(Math.random() * 0.4).toFixed(1)}%`;
+    }
+    setInterval(updateTelemetry, 3500);
+
+    function addMessage(text, type = "bot", withActions = false){
+      const msg = document.createElement("div");
+      msg.className = `msg ${type}`;
+      msg.textContent = text;
+
+      if (withActions && type === "bot") {
+        const actions = document.createElement("div");
+        actions.className = "msg-actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "tiny-btn";
+        copyBtn.textContent = "⧉";
+        copyBtn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch {}
+        };
+
+        const speakBtn = document.createElement("button");
+        speakBtn.className = "tiny-btn";
+        speakBtn.textContent = "🔊";
+        speakBtn.onclick = () => speakText(text);
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(speakBtn);
+        msg.appendChild(actions);
+      }
+
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTyping(){
+      const wrap = document.createElement("div");
+      wrap.className = "msg bot";
+      wrap.id = "typingMsg";
+      wrap.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+      chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping(){
+      const t = document.getElementById("typingMsg");
+      if (t) t.remove();
+    }
+
+    async function speakText(text){
+      if (!("speechSynthesis" in window)) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1;
+      utter.volume = 1;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utter);
+    }
+
+    async function sendMessage(){
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      userInput.value = "";
+      showTyping();
+
+      try {
+        const res = await fetch(NOVA_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text,
+            mode: text.length > 80 ? "deep" : "fast"
+          })
+        });
+
+        const data = await res.json();
+        removeTyping();
+
+        const reply = data.reply || "NOVA silent now. Try again.";
+        addMessage(reply, "bot", true);
+
+      } catch (err) {
+        removeTyping();
+        addMessage("Connection failed. Backend unreachable or CORS issue.", "bot", true);
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    micBtn.addEventListener("click", () => {
+      if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+        addMessage("Voice input not supported in this browser.", "bot", true);
+        return;
+      }
+
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR();
+      rec.lang = "en-US";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        micBtn.style.transform = "scale(1.08)";
+      };
+
+      rec.onend = () => {
+        micBtn.style.transform = "scale(1)";
+      };
+
+      rec.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+      };
+
+      rec.onerror = () => {
+        addMessage("Mic capture failed.", "bot", true);
+      };
+
+      rec.start();
+    });
+
+    const NOTE_KEY = "ud_nova_notes";
+
+    function saveNotes(){
+      localStorage.setItem(NOTE_KEY, notesArea.value);
+      saveStatus.textContent = "Saved";
+      setTimeout(() => saveStatus.textContent = "Not saved", 1200);
+    }
+
+    notesArea.value = localStorage.getItem(NOTE_KEY) || "";
+    let noteTimer = null;
+
+    notesArea.addEventListener("input", () => {
+      saveStatus.textContent = "Saving...";
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(saveNotes, 2000);
+    });
+
+    setInterval(saveNotes, 30000);
+
+    window.addEventListener("load", () => {
+      updateTelemetry();
+    });
+  </script>
+</body>
+</html>
