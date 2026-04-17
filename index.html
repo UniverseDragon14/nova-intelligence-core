@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Universal Dragon | NOVA Intelligence Core</title>
+  <title>Universal Dragon | NOVA Hacker Core</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root{
-      --bg1:#090b22;
-      --bg2:#1b1f68;
-      --bg3:#311a80;
-      --panel:rgba(56,74,190,.26);
-      --panel-2:rgba(71,96,255,.18);
-      --line:rgba(190,220,255,.22);
-      --cyan:#8ff5ff;
-      --cyan-2:#59d9ff;
-      --text:#eef6ff;
-      --muted:#c9d5ff;
-      --soft:#9fb2ff;
-      --green:#77ffb3;
-      --pink:#ffc6ef;
-      --shadow:0 10px 40px rgba(0,0,0,.28);
+      --bg1:#010601;
+      --bg2:#031003;
+      --bg3:#071a07;
+      --panel:rgba(0,255,120,.08);
+      --panel-2:rgba(0,255,120,.05);
+      --line:rgba(57,255,117,.22);
+      --green:#39ff75;
+      --green-2:#7cff9e;
+      --green-soft:#baffca;
+      --text:#ddffe6;
+      --muted:#97d7a8;
+      --shadow:0 12px 40px rgba(0,0,0,.45);
       --radius:22px;
     }
 
@@ -30,49 +28,97 @@
       font-family:'Rajdhani',sans-serif;
       color:var(--text);
       min-height:100vh;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(120,150,255,.25), transparent 22%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,.08), transparent 15%),
-        radial-gradient(circle at 50% 85%, rgba(100,220,255,.15), transparent 18%),
-        linear-gradient(180deg, #0a0d2d 0%, #1a1f6f 42%, #2a1e7d 100%);
       overflow-x:hidden;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(0,255,120,.12), transparent 22%),
+        radial-gradient(circle at 80% 20%, rgba(120,255,180,.08), transparent 15%),
+        radial-gradient(circle at 50% 85%, rgba(0,255,120,.10), transparent 18%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
+      perspective: 1200px;
     }
 
     .bg-grid{
-      position:fixed; inset:0; pointer-events:none; z-index:0;
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
       background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+        linear-gradient(rgba(57,255,117,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,255,117,.06) 1px, transparent 1px);
       background-size:34px 34px;
-      opacity:.22;
+      opacity:.28;
+      transform: perspective(1200px) rotateX(72deg) translateY(-16vh) scale(1.8);
+      transform-origin:center top;
+    }
+
+    .scanlines{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.02) 0px,
+        rgba(255,255,255,.02) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      opacity:.1;
     }
 
     .glow{
-      position:fixed; inset:auto;
-      width:420px; height:420px; border-radius:50%;
-      filter:blur(70px); opacity:.18; pointer-events:none; z-index:0;
-      background:radial-gradient(circle, #98b6ff, transparent 65%);
-      top:80px; left:-90px;
+      position:fixed;
+      width:420px;
+      height:420px;
+      border-radius:50%;
+      filter:blur(90px);
+      opacity:.18;
+      pointer-events:none;
+      z-index:0;
+      background:radial-gradient(circle, rgba(57,255,117,.7), transparent 65%);
+      top:60px;
+      left:-120px;
     }
 
     .glow.right{
-      top:220px; right:-120px; left:auto;
-      background:radial-gradient(circle, #7ef0ff, transparent 65%);
+      top:220px;
+      right:-120px;
+      left:auto;
+      background:radial-gradient(circle, rgba(90,255,160,.6), transparent 65%);
     }
 
     .wrap{
-      position:relative; z-index:1;
-      width:min(920px, 100%);
+      position:relative;
+      z-index:2;
+      width:min(980px, 100%);
       margin:0 auto;
       padding:18px 14px 28px;
     }
 
     .glass{
-      background:linear-gradient(180deg, rgba(98,118,255,.22), rgba(65,77,187,.18));
+      background:
+        linear-gradient(180deg, rgba(0,255,120,.09), rgba(0,255,120,.04));
       border:1px solid var(--line);
-      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      box-shadow:
+        var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 0 20px rgba(57,255,117,.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .panel-3d{
+      transform-style:preserve-3d;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .panel-3d:hover{
+      transform:translateY(-2px) rotateX(2deg) rotateY(-2deg);
+      box-shadow:
+        0 16px 45px rgba(0,0,0,.5),
+        0 0 24px rgba(57,255,117,.14),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      border-color:rgba(57,255,117,.35);
     }
 
     .topbar{
@@ -85,18 +131,23 @@
     }
 
     .topbar .left{
-      display:flex; align-items:center; gap:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
       font-family:'Orbitron',monospace;
       font-size:.88rem;
-      color:var(--cyan);
+      color:var(--green-2);
       letter-spacing:1px;
       font-weight:700;
+      text-shadow:0 0 12px rgba(57,255,117,.35);
     }
 
     .green-dot{
-      width:10px; height:10px; border-radius:999px;
-      background:#74ffb2;
-      box-shadow:0 0 14px #74ffb2;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:var(--green);
+      box-shadow:0 0 14px var(--green);
       animation:pulse 1.8s infinite;
     }
 
@@ -107,7 +158,7 @@
 
     .topbar .right{
       font-family:'Orbitron',monospace;
-      color:#e5fbff;
+      color:var(--green-soft);
       font-size:.82rem;
       letter-spacing:1px;
     }
@@ -117,8 +168,24 @@
       padding:26px 18px 18px;
       margin-bottom:16px;
       background:
-        radial-gradient(circle at 15% 25%, rgba(148,183,255,.20), transparent 18%),
-        linear-gradient(180deg, rgba(76,98,255,.28), rgba(62,68,177,.20));
+        radial-gradient(circle at 15% 25%, rgba(57,255,117,.13), transparent 20%),
+        linear-gradient(180deg, rgba(0,255,120,.10), rgba(0,255,120,.04));
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(115deg, transparent 10%, rgba(255,255,255,.05) 22%, transparent 34%);
+      transform:translateX(-120%);
+      animation:sweep 7s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes sweep{
+      to { transform:translateX(120%); }
     }
 
     .brand{
@@ -127,15 +194,15 @@
       font-weight:900;
       line-height:1;
       letter-spacing:2px;
-      color:#bffcff;
-      text-shadow:0 0 18px rgba(143,245,255,.25);
+      color:var(--green-2);
+      text-shadow:0 0 18px rgba(57,255,117,.32);
       margin-bottom:10px;
       text-transform:uppercase;
     }
 
     .sub{
       font-family:'Orbitron',monospace;
-      color:#f6f0ff;
+      color:#d8ffe3;
       letter-spacing:3px;
       text-transform:uppercase;
       font-size:.86rem;
@@ -144,57 +211,25 @@
     }
 
     .pill{
-      display:flex; align-items:center; gap:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
       border-radius:999px;
       padding:12px 18px;
       margin-top:10px;
       font-weight:700;
       font-size:1rem;
+      color:#e6ffed;
     }
 
     .pill + .pill{ margin-top:12px; }
-
-    .pill .icon{
-      width:22px; text-align:center; opacity:.95;
-    }
+    .pill .icon{ width:22px; text-align:center; opacity:.95; }
 
     .grid{
       display:grid;
       grid-template-columns:1fr;
       gap:14px;
       margin-bottom:16px;
-    }
-
-    .card{
-      border-radius:24px;
-      padding:18px 18px;
-    }
-
-    .mini-label{
-      font-family:'Orbitron',monospace;
-      font-size:.82rem;
-      letter-spacing:1.8px;
-      text-transform:uppercase;
-      color:#dfe9ff;
-      margin-bottom:8px;
-      opacity:.95;
-    }
-
-    .big-value{
-      font-family:'Orbitron',monospace;
-      font-size:2.05rem;
-      font-weight:800;
-      color:#d9ffff;
-      line-height:1.1;
-      text-shadow:0 0 10px rgba(150,235,255,.18);
-    }
-
-    .sub-value{
-      margin-top:6px;
-      color:#e7efff;
-      font-size:1rem;
-      font-weight:600;
-      opacity:.95;
     }
 
     .split{
@@ -204,10 +239,63 @@
       margin-bottom:16px;
     }
 
+    .card{
+      border-radius:24px;
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:24px;
+      pointer-events:none;
+      background:linear-gradient(120deg, transparent, rgba(57,255,117,.06), transparent);
+    }
+
+    .mini-label{
+      font-family:'Orbitron',monospace;
+      font-size:.82rem;
+      letter-spacing:1.8px;
+      text-transform:uppercase;
+      color:#cbffd8;
+      margin-bottom:8px;
+      opacity:.95;
+    }
+
+    .big-value{
+      font-family:'Orbitron',monospace;
+      font-size:2.05rem;
+      font-weight:800;
+      color:#e5ffec;
+      line-height:1.1;
+      text-shadow:0 0 10px rgba(57,255,117,.22);
+    }
+
+    .sub-value{
+      margin-top:6px;
+      color:#d4ffde;
+      font-size:1rem;
+      font-weight:600;
+      opacity:.95;
+    }
+
     .console{
       border-radius:26px;
       padding:18px;
       margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .console::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at top right, rgba(57,255,117,.08), transparent 30%);
+      pointer-events:none;
     }
 
     .console-head{
@@ -222,26 +310,31 @@
       font-family:'Orbitron',monospace;
       font-size:1.35rem;
       font-weight:800;
-      color:#f1fbff;
-      display:flex; align-items:center; gap:10px;
+      color:#f1fff3;
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
 
     .console-title .prompt{
-      color:#d8f0ff;
+      color:var(--green-2);
       font-size:1.45rem;
+      text-shadow:0 0 12px rgba(57,255,117,.35);
     }
 
     .search{
       min-width:220px;
       max-width:260px;
-      display:flex; align-items:center; gap:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
       padding:10px 14px;
       border-radius:14px;
-      color:#f4fbff;
+      color:#e6ffed;
       font-weight:700;
       font-size:.95rem;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(57,255,117,.18);
     }
 
     .chat-box{
@@ -257,7 +350,7 @@
 
     .chat-box::-webkit-scrollbar{ width:8px; }
     .chat-box::-webkit-scrollbar-thumb{
-      background:rgba(255,255,255,.18);
+      background:rgba(57,255,117,.22);
       border-radius:999px;
     }
 
@@ -265,12 +358,22 @@
       max-width:84%;
       border-radius:20px;
       padding:14px 16px;
-      border:1px solid rgba(220,240,255,.22);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      border:1px solid rgba(57,255,117,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 0 10px rgba(57,255,117,.05);
       font-size:1.07rem;
-      line-height:1.4;
+      line-height:1.45;
       animation:fadeUp .25s ease;
       white-space:pre-wrap;
+      position:relative;
+    }
+
+    .msg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:20px;
+      pointer-events:none;
+      box-shadow: inset 0 0 18px rgba(57,255,117,.03);
     }
 
     @keyframes fadeUp{
@@ -280,14 +383,14 @@
 
     .msg.bot{
       align-self:flex-start;
-      background:linear-gradient(180deg, rgba(110,160,255,.23), rgba(72,92,224,.18));
-      color:#f5fbff;
+      background:linear-gradient(180deg, rgba(0,255,120,.10), rgba(0,255,120,.04));
+      color:#f0fff4;
     }
 
     .msg.user{
       align-self:flex-end;
-      background:linear-gradient(180deg, rgba(167,128,255,.22), rgba(119,93,224,.18));
-      color:#fff5ff;
+      background:linear-gradient(180deg, rgba(20,80,35,.7), rgba(10,40,18,.7));
+      color:#ebffee;
       border-bottom-right-radius:8px;
     }
 
@@ -295,16 +398,19 @@
       margin-top:8px;
       display:flex;
       gap:8px;
-      opacity:.9;
+      opacity:.92;
     }
 
     .tiny-btn{
-      width:28px; height:28px;
+      width:28px;
+      height:28px;
       border-radius:10px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.08);
+      border:1px solid rgba(57,255,117,.16);
+      background:rgba(255,255,255,.04);
       color:#fff;
-      display:flex; align-items:center; justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-size:.88rem;
       cursor:pointer;
     }
@@ -319,53 +425,62 @@
     .text-input{
       height:54px;
       border-radius:16px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
+      border:1px solid rgba(57,255,117,.18);
+      background:rgba(255,255,255,.03);
       color:#fff;
       padding:0 16px;
       font-size:1.02rem;
       outline:none;
       font-family:'Rajdhani',sans-serif;
       font-weight:600;
+      box-shadow: inset 0 0 10px rgba(57,255,117,.05);
     }
 
-    .text-input::placeholder{ color:#d7e3ff; opacity:.72; }
+    .text-input::placeholder{ color:#c8ffd4; opacity:.65; }
 
     .round-btn{
-      height:54px; width:50px;
-      border:none; border-radius:16px;
+      height:54px;
+      width:50px;
+      border:none;
+      border-radius:16px;
       cursor:pointer;
       color:#fff;
       font-size:1.18rem;
       box-shadow:var(--shadow);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+
+    .round-btn:hover{
+      transform:translateY(-1px) scale(1.02);
+      box-shadow:0 0 18px rgba(57,255,117,.14);
     }
 
     .mic-btn{
-      background:linear-gradient(180deg, rgba(142,120,255,.45), rgba(107,91,230,.35));
-      border:1px solid rgba(255,255,255,.16);
+      background:linear-gradient(180deg, rgba(0,255,120,.20), rgba(0,255,120,.10));
+      border:1px solid rgba(57,255,117,.16);
     }
 
     .send-btn{
       width:56px;
-      background:linear-gradient(180deg, #ffe8f8, #ffc8ef);
-      color:#4d2858;
+      background:linear-gradient(180deg, #9dffb5, #39ff75);
+      color:#06220d;
       font-weight:900;
     }
 
-    .note-card,
-    .stat-card,
-    .sec-card{
+    .note-card,.stat-card,.sec-card{
       border-radius:24px;
       padding:16px;
       margin-bottom:14px;
     }
 
     .section-title{
-      display:flex; justify-content:space-between; align-items:center;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
       margin-bottom:12px;
       font-family:'Orbitron',monospace;
       font-size:1rem;
-      color:#f2fbff;
+      color:#f2fff4;
       font-weight:700;
     }
 
@@ -374,65 +489,66 @@
       min-height:180px;
       resize:vertical;
       border-radius:18px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
+      border:1px solid rgba(57,255,117,.18);
+      background:rgba(255,255,255,.03);
       color:#fff;
       padding:16px;
       font-size:1rem;
       font-family:'Rajdhani',sans-serif;
       outline:none;
+      box-shadow: inset 0 0 12px rgba(57,255,117,.05);
     }
 
-    .notes::placeholder{ color:#d7e3ff; opacity:.7; }
+    .notes::placeholder{ color:#d7ffe0; opacity:.7; }
 
     .note-help{
       margin-top:8px;
       font-size:.9rem;
-      color:#f0f6ff;
+      color:#eaffee;
       opacity:.84;
     }
 
-    .stat{
-      margin-bottom:14px;
-    }
-
+    .stat{ margin-bottom:14px; }
     .stat:last-child{ margin-bottom:0; }
 
     .stat-head{
-      display:flex; justify-content:space-between; align-items:center;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
       margin-bottom:8px;
       font-family:'Orbitron',monospace;
-      color:#f4fbff;
+      color:#f4fff6;
       font-size:.95rem;
     }
 
     .bar{
       height:14px;
       border-radius:999px;
-      background:rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(57,255,117,.12);
     }
 
     .fill{
       height:100%;
       border-radius:999px;
-      background:linear-gradient(90deg, #a7fbff, #7be3ff);
-      box-shadow:0 0 14px rgba(123,227,255,.3);
+      background:linear-gradient(90deg, #baffca, #39ff75);
+      box-shadow:0 0 14px rgba(57,255,117,.35);
+      transition:width .7s ease;
     }
 
     .sec-box{
       border-radius:18px;
-      padding:14px 14px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.14);
+      padding:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(57,255,117,.14);
     }
 
     .sec-title{
       font-family:'Orbitron',monospace;
       font-size:.94rem;
       margin-bottom:8px;
-      color:#eeffff;
+      color:#eefff1;
     }
 
     .sec-ok{
@@ -442,7 +558,7 @@
     }
 
     .sec-text{
-      color:#f0f5ff;
+      color:#f0fff4;
       font-size:.96rem;
       opacity:.92;
       line-height:1.45;
@@ -451,7 +567,7 @@
     .footer{
       text-align:center;
       margin-top:10px;
-      color:#eef4ff;
+      color:#e9ffed;
       opacity:.84;
       font-family:'Orbitron',monospace;
       font-size:.82rem;
@@ -460,11 +576,15 @@
     }
 
     .typing{
-      display:flex; gap:6px; align-items:center;
+      display:flex;
+      gap:6px;
+      align-items:center;
     }
 
     .typing span{
-      width:8px; height:8px; border-radius:50%;
+      width:8px;
+      height:8px;
+      border-radius:50%;
       background:#dffcff;
       animation:bounce 1.2s infinite;
       opacity:.8;
@@ -478,7 +598,7 @@
       40%{ transform:scale(1); opacity:1; }
     }
 
-    @media (max-width: 700px){
+    @media (max-width:700px){
       .split{ grid-template-columns:1fr; }
       .console-head{ flex-direction:column; align-items:stretch; }
       .search{ max-width:none; }
@@ -489,11 +609,12 @@
 </head>
 <body>
   <div class="bg-grid"></div>
+  <div class="scanlines"></div>
   <div class="glow"></div>
   <div class="glow right"></div>
 
   <div class="wrap">
-    <div class="topbar glass">
+    <div class="topbar glass panel-3d">
       <div class="left">
         <div class="green-dot"></div>
         <span>TRK-992-X</span>
@@ -501,41 +622,41 @@
       <div class="right">0% PACKET LOSS</div>
     </div>
 
-    <section class="hero glass">
+    <section class="hero glass panel-3d">
       <div class="brand">UNIVERSAL DRAGON</div>
-      <div class="sub">NOVA Intelligence Core · Created by Aslam</div>
+      <div class="sub">NOVA Hacker Core · Created by Aslam</div>
 
-      <div class="pill glass">
+      <div class="pill glass panel-3d">
         <span class="icon">🛡️</span>
         <span>Help in silence • Protect with intelligence</span>
       </div>
 
-      <div class="pill glass" id="voiceStatus">
+      <div class="pill glass panel-3d" id="voiceStatus">
         <span class="icon">🔊</span>
         <span>AUTO-SPEAK WHEN MOOD CHANGES: OFF</span>
       </div>
     </section>
 
     <div class="grid">
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="big-value" id="uptime">00:08:07</div>
         <div class="sub-value">SYSTEM UPTIME</div>
       </div>
 
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="big-value" style="color:#c8fff0;">ONLINE</div>
         <div class="sub-value">CORE STATUS</div>
       </div>
     </div>
 
     <div class="split">
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="mini-label">System Mode</div>
-        <div class="big-value" style="font-size:1.45rem;">MULTIVERSE CORE</div>
+        <div class="big-value" style="font-size:1.45rem;">HACKER CORE</div>
         <div class="sub-value">● STIFF: <span id="stiffClock">00:14:20</span></div>
       </div>
 
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="mini-label">Power Status</div>
         <div class="big-value" style="font-size:1.4rem;">UNSTOPPABLE</div>
         <div class="sub-value">● LEVEL: MAXIMUM</div>
@@ -543,28 +664,28 @@
     </div>
 
     <div class="split">
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="mini-label">Access Card Key</div>
         <div class="big-value" style="font-size:1.15rem;">TRK-992-X</div>
         <div class="sub-value">● STATUS: AUTHORIZED</div>
       </div>
 
-      <div class="card glass">
+      <div class="card glass panel-3d">
         <div class="mini-label">Network Health</div>
         <div class="big-value" id="latencyValue" style="font-size:1.3rem;">16ms</div>
         <div class="sub-value"><span id="packetLossValue">0.2%</span> PACKET LOSS</div>
       </div>
     </div>
 
-    <section class="console glass">
+    <section class="console glass panel-3d">
       <div class="console-head">
         <div class="console-title"><span class="prompt">&gt;_</span> Nova Console</div>
         <div class="search">🔍 <span>Search logs...</span></div>
       </div>
 
       <div class="chat-box" id="chatBox">
-        <div class="msg bot">System online. I am Nova. Enter your next command.</div>
-        <div class="msg bot">Hi bro! Multiverse Regional Node activated. Enna matter? Powering up... dominance established.</div>
+        <div class="msg bot">System online. I am NOVA. Enter your next command.</div>
+        <div class="msg bot">Hi bro! Hacker core activated. Enna matter? Secure mode running.</div>
         <div class="msg bot">Safe modes only: chat, notes, reminders, security checks, and system status.</div>
       </div>
 
@@ -575,7 +696,7 @@
       </div>
     </section>
 
-    <section class="note-card glass">
+    <section class="note-card glass panel-3d">
       <div class="section-title">
         <span>🗂️ System Notes</span>
         <span id="saveStatus">Not saved</span>
@@ -584,7 +705,7 @@
       <div class="note-help">* Auto-save active: Saves every 30s or after 2s of inactivity.</div>
     </section>
 
-    <section class="stat-card glass">
+    <section class="stat-card glass panel-3d">
       <div class="stat">
         <div class="stat-head">
           <span>⚡ CPU LOAD</span>
@@ -610,7 +731,7 @@
       </div>
     </section>
 
-    <section class="sec-card glass">
+    <section class="sec-card glass panel-3d">
       <div class="sec-box">
         <div class="sec-title">SECURITY STATUS</div>
         <div class="sec-ok">Ethical Mode Active</div>
@@ -618,7 +739,7 @@
       </div>
     </section>
 
-    <div class="footer">Universal Dragon OS v1 • Nova Intelligence Core • Secure Build</div>
+    <div class="footer">Universal Dragon OS v1 • NOVA Hacker Core • Secure Build</div>
   </div>
 
   <script>
@@ -679,9 +800,7 @@
         copyBtn.className = "tiny-btn";
         copyBtn.textContent = "⧉";
         copyBtn.onclick = async () => {
-          try {
-            await navigator.clipboard.writeText(text);
-          } catch {}
+          try { await navigator.clipboard.writeText(text); } catch {}
         };
 
         const speakBtn = document.createElement("button");
@@ -810,6 +929,21 @@
 
     window.addEventListener("load", () => {
       updateTelemetry();
+
+      document.querySelectorAll(".panel-3d").forEach(card => {
+        card.addEventListener("mousemove", e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const rx = ((y / rect.height) - 0.5) * -4;
+          const ry = ((x / rect.width) - 0.5) * 4;
+          card.style.transform = `translateY(-2px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      });
     });
   </script>
 </body>
