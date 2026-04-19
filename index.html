@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universal Dragon | Main Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root{
+      --bg1:#020a05; --bg2:#04160c; --bg3:#072214;
+      --panel:rgba(0,255,128,.08); --panel2:rgba(0,255,128,.05);
+      --line:rgba(90,255,160,.22); --green:#62ff9a; --green2:#2aff7b;
+      --soft:#c9ffe0; --muted:#95c9a8; --text:#effff5;
+      --shadow:0 10px 30px rgba(0,0,0,.35); --radius:24px;
+    }
+    body{
+      font-family:'Rajdhani',sans-serif; color:var(--text); min-height:100vh;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(0,255,128,.08), transparent 22%),
+        radial-gradient(circle at 80% 10%, rgba(80,255,170,.07), transparent 18%),
+        radial-gradient(circle at 50% 90%, rgba(30,255,120,.05), transparent 20%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+      overflow-x:hidden;
+    }
+    .grid-bg{
+      position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:32px 32px;
+    }
+    .scan{
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:linear-gradient(to bottom, transparent 0%, rgba(0,255,120,.03) 50%, transparent 100%);
+      background-size:100% 7px; animation:scanMove 7s linear infinite; opacity:.25;
+    }
+    @keyframes scanMove{ from{ transform:translateY(-30px);} to{ transform:translateY(30px);} }
+    .wrap{ position:relative; z-index:1; width:min(1100px, calc(100% - 24px)); margin:0 auto; padding:16px 0 34px; }
+    .glass{
+      background:linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.05);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    }
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:14px 18px; border-radius:18px; margin-bottom:14px;
+    }
+    .top-left,.top-right{
+      display:flex; align-items:center; gap:10px; font-family:'Orbitron',monospace;
+      font-size:.9rem; letter-spacing:1px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%; background:var(--green);
+      box-shadow:0 0 12px var(--green); animation:pulse 1.8s infinite;
+    }
+    @keyframes pulse{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.45;transform:scale(.85);} }
+    .hero{
+      border-radius:28px; padding:28px 20px 22px; margin-bottom:16px;
+      background: radial-gradient(circle at 15% 20%, rgba(80,255,170,.12), transparent 18%), linear-gradient(180deg, rgba(0,255,128,.07), rgba(0,255,128,.03));
+    }
+    .brand{
+      font-family:'Orbitron',monospace; font-size:clamp(2rem, 6vw, 4rem); font-weight:900;
+      line-height:1; color:var(--green); text-transform:uppercase; letter-spacing:2px;
+      text-shadow:0 0 18px rgba(98,255,154,.18); margin-bottom:12px;
+    }
+    .sub{
+      font-family:'Orbitron',monospace; color:#eafff0; opacity:.92; letter-spacing:3px;
+      text-transform:uppercase; font-size:.88rem; margin-bottom:12px;
+    }
+    .tagline{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 16px;
+      border-radius:999px; margin:8px 0 14px; font-size:1rem; font-weight:700;
+    }
+    .lead{ color:var(--soft); font-size:1.12rem; line-height:1.6; max-width:860px; }
+    .section{ border-radius:26px; padding:18px; margin-bottom:16px; }
+    .title{
+      font-family:'Orbitron',monospace; font-size:1.25rem; color:var(--green);
+      margin-bottom:14px; text-transform:uppercase; letter-spacing:1px;
+    }
+    .cards{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+    .card{
+      border-radius:22px; padding:18px;
+      background:linear-gradient(180deg, rgba(0,255,128,.07), rgba(0,255,128,.03));
+      border:1px solid var(--line); transition:.25s ease;
+    }
+    .card h3{ font-family:'Orbitron',monospace; color:#f1fff6; font-size:1.05rem; margin-bottom:10px; min-height:54px; }
+    .card p{ color:var(--soft); font-size:1rem; line-height:1.55; min-height:112px; }
+    .card a{
+      display:inline-block; margin-top:14px; padding:12px 16px; border-radius:14px;
+      text-decoration:none; color:#041109; font-weight:800;
+      background:linear-gradient(180deg, var(--green), var(--green2));
+      box-shadow:0 6px 18px rgba(42,255,123,.22);
+    }
+    .philo{ display:grid; grid-template-columns:1.2fr .9fr; gap:14px; }
+    .box{
+      border-radius:22px; padding:18px; border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(0,255,128,.06), rgba(0,255,128,.025));
+    }
+    .big-line{ font-family:'Orbitron',monospace; font-size:1.18rem; line-height:1.6; color:#f0fff5; }
+    .box ul{ padding-left:18px; color:var(--soft); line-height:1.8; font-size:1rem; }
+    .modules{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px; }
+    .module{
+      border-radius:18px; padding:14px; border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .module strong{ display:block; color:var(--green); margin-bottom:6px; font-family:'Orbitron',monospace; font-size:.92rem; }
+    .module span{ color:var(--soft); line-height:1.5; }
+    .links{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+    .link-box{
+      border-radius:22px; padding:18px; border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(0,255,128,.05), rgba(0,255,128,.02));
+    }
+    .link-box h4{ font-family:'Orbitron',monospace; color:#f5fff8; margin-bottom:10px; font-size:1rem; }
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; }
+    .btn{
+      display:inline-block; text-decoration:none; padding:12px 14px; border-radius:14px;
+      color:#f4fff7; border:1px solid var(--line); background:rgba(255,255,255,.03); font-weight:700;
+    }
+    .status-line{ margin-top:10px; color:var(--muted); font-size:.95rem; }
+    .footer{
+      text-align:center; padding:10px 0 4px; color:#d5ffe2; opacity:.75;
+      font-family:'Orbitron',monospace; font-size:.8rem; letter-spacing:1px;
+    }
+    @media (max-width: 900px){ .cards,.links,.philo{ grid-template-columns:1fr; } }
+    @media (max-width: 640px){
+      .topbar{ flex-direction:column; align-items:flex-start; }
+      .modules{ grid-template-columns:1fr; }
+      .brand{ letter-spacing:1px; }
+      .sub{ letter-spacing:2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="scan"></div>
+  <div class="wrap">
+    <div class="topbar glass">
+      <div class="top-left"><div class="dot"></div><span>UNIVERSAL DRAGON</span></div>
+      <div class="top-right"><span>PUBLIC PORTAL</span></div>
+    </div>
+
+    <section class="hero glass">
+      <div class="brand">UNIVERSAL DRAGON</div>
+      <div class="sub">NOVA · AI · ROBOTICS · SYSTEMS · CREATED BY ASLAM</div>
+      <div class="tagline glass">🛡️ Help in silence • Protect with intelligence</div>
+      <p class="lead">
+        Universal Dragon is a long-term real-world system project by Aslam.
+        It connects AI, robotics, automation, system design, observation, and ethical engineering into one evolving platform.
+      </p>
+    </section>
+
+    <section class="section glass">
+      <div class="title">Public Projects</div>
+      <div class="cards">
+        <div class="card">
+          <h3>NOVA Core AI Robotics</h3>
+          <p>The main public identity page for NOVA Core. Focused on AI, robotics, Raspberry Pi, automation, and practical real-world system design.</p>
+          <a href="https://universedragon14.github.io/" target="_blank" rel="noopener noreferrer">Open Project</a>
+        </div>
+        <div class="card">
+          <h3>Dragon Eye</h3>
+          <p>AI safety monitoring dashboard concept for fire, motion, CCTV, mobile camera, alerts, and practical observation-focused safety workflows.</p>
+          <a href="https://universedragon14.github.io/universal-dragon-eye/" target="_blank" rel="noopener noreferrer">Open Project</a>
+        </div>
+        <div class="card">
+          <h3>NOVA Hacker Core</h3>
+          <p>A live hacker-style NOVA interface with FAST and DEEP interaction modes, notes, system visuals, and future-ready public console presentation.</p>
+          <a href="https://universaldragon.com" target="_blank" rel="noopener noreferrer">Open Project</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section glass">
+      <div class="title">NOVA Core Direction</div>
+      <div class="philo">
+        <div class="box">
+          <div class="big-line">
+            NOVA is not just a chatbot or AI.<br><br>
+            NOVA should not only answer what is known.<br>
+            NOVA should learn how to approach what is unknown.
+          </div>
+        </div>
+        <div class="box">
+          <ul>
+            <li>Observe unfamiliar signals</li>
+            <li>Detect patterns with patience</li>
+            <li>Separate sound, structure, and intent</li>
+            <li>Approach unknown communication carefully</li>
+            <li>Build bridges even before full translation</li>
+            <li>Stay calm, consistent, and low-ego</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modules">
+        <div class="module"><strong>Signal Intake</strong><span>Voice, text, image, sensor data, symbols, and unfamiliar forms of input.</span></div>
+        <div class="module"><strong>Pattern Engine</strong><span>Repetition, structure, rhythm, relationship, and meaning hypothesis detection.</span></div>
+        <div class="module"><strong>Translation Layer</strong><span>Build a bridge even when the input is not a known language.</span></div>
+        <div class="module"><strong>Intent Engine</strong><span>Identify danger, curiosity, request, emotion, and communication purpose.</span></div>
+        <div class="module"><strong>Adaptive Reply</strong><span>Not just answer fast — respond in a matching and useful communication style.</span></div>
+        <div class="module"><strong>Contact Intelligence</strong><span>More patience, memory, pattern detection, and consistency. Less ego. Less panic.</span></div>
+      </div>
+    </section>
+
+    <section class="section glass">
+      <div class="title">Connect</div>
+      <div class="links">
+        <div class="link-box">
+          <h4>Main Links</h4>
+          <div class="btns">
+            <a class="btn" href="https://universaldragon.com" target="_blank" rel="noopener noreferrer">Main Portal</a>
+            <a class="btn" href="https://universedragon14.github.io/" target="_blank" rel="noopener noreferrer">GitHub Site</a>
+            <a class="btn" href="https://github.com/UniverseDragon14" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+          </div>
+          <div class="status-line">Public identity hub for Universal Dragon.</div>
+        </div>
+
+        <div class="link-box">
+          <h4>Contact</h4>
+          <div class="btns">
+            <a class="btn" href="mailto:univercialdragon@gmail.com">Email Aslam</a>
+            <a class="btn" href="https://nova.universaldragon.com/health" target="_blank" rel="noopener noreferrer">NOVA Health</a>
+          </div>
+          <div class="status-line">Creator: Aslam · Project identity: Universal Dragon</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">UNIVERSAL DRAGON · ASLAM · NOVA · REAL SYSTEMS FIRST</div>
+  </div>
+</body>
+</html>
